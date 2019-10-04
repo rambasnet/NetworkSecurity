@@ -28,7 +28,7 @@ Scapy: https://github.com/secdev/scapy/
 # Play with Notebooks
 
 -   Clone/download this repository
--   Compile and run C programs found in demo-programs folder
+-   You must run the notebook as root to use some scappy features such as sniff()
 -   Using a terminal cd into the repo folder and run 
-    ```jupyter notebook` or `jupyter lab`
+    ```# jupyter notebook --allow-root`
 -   Open Introduction.ipynb chapter and access all the notebooks
