@@ -12,7 +12,6 @@ Scapy: https://github.com/secdev/scapy/
 - Linux Bash
 - gcc
 - Jupyter Notebook
-- Jupyter Lab
 - Python3
 
 # Install Required Tools
