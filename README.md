@@ -1,6 +1,6 @@
 # Network Tools and Scapy Notebooks
 
-Jupyter Notebooks for learning bash network utility tools and scapy library - a powerful interactive packet manipulation program for Python
+Jupyter Notebooks for learning network-based buffer overflows, network utility tools and scapy library - a powerful interactive packet manipulation program for Python
 
 Scapy: https://github.com/secdev/scapy/
 
