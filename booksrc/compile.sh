@@ -7,7 +7,7 @@ if (( $aslr != 0 )); then
         echo "Need sudo priviledge to disable aslr..."
     fi
     # provide password for sudo user
-    echo dees | sudo -S ls /proc/sys/kernel/randomize_va_space
+    ls /proc/sys/kernel/randomize_va_space
     echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
 fi
 
