@@ -9,7 +9,7 @@ Scapy: https://github.com/secdev/scapy/
 
 # Requirements
 
-- Linux Bash
+- Linux
 - gcc
 - Jupyter Notebook
 - Python3
@@ -23,11 +23,16 @@ Scapy: https://github.com/secdev/scapy/
     -   `sudo pip install jupyter-c-kernel`
     -   `sudo install_c_kernel`
     - NOTE: if conda is used to install notebook, you must run notebook as root to run C kernel
+    
 
 # Play with Notebooks
 
 -   Clone/download this repository
 -   You must run the notebook as root to use some scappy features such as sniff()
--   Using a terminal cd into the repo folder and run 
-    ```# jupyter notebook --allow-root`
--   Open Introduction.ipynb chapter and access all the notebooks
+-   Using a terminal cd into the repo folder and run
+
+    ```bash
+    jupyter notebook
+    ```
+    
+-   Open 00-TableOfContents.ipynb chapter and access all the notebooks
