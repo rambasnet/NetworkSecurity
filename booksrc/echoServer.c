@@ -55,9 +55,9 @@ int main(void) {
  */
 void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
    unsigned char *ptr, buffer[500];
-   int fd, length;
+   int length;
 
-   length = get_internet_data(sockfd, buffer);
+   length =  get_internet_data(sockfd, buffer);
 
    printf("Got request from %s:%d \"%s\"\n", inet_ntoa(client_addr_ptr->sin_addr), ntohs(client_addr_ptr->sin_port), buffer);
    echo(sockfd, buffer);
