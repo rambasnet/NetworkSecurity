@@ -13,9 +13,9 @@ fi
 
 # compile disabling all the security flags
 if (( $# == 1 )); then
-    gcc -g -m32 -fno-stack-protector -z execstack -no-pie $1 && echo "Output file is a.out"
+    g++ -g -m32 -fno-stack-protector -z execstack -no-pie $1 && echo "Output file is a.out"
 elif (( $# == 2 )); then
-    gcc -g -m32 -fno-stack-protector -z execstack -no-pie -o $2 $1
+    g++ -g -m32 -fno-stack-protector -z execstack -no-pie -o $2 $1
 else
     echo "Error... No input file provided..."
     echo "./compile.sh <inputfile.c> [a.out]"
