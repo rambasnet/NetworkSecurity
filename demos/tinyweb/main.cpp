@@ -7,8 +7,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "../utility/utility.h"
-#include "../utility/net_utility.h"
+#include "../util/utility.h"
+#include "../util/net_utility.h"
+
+enum REQUEST_TYPE {GET, POST, HEAD, UNKNOWN};
 
 using namespace std;
 
@@ -17,6 +19,8 @@ using namespace std;
 
 void handle_connection(int, struct sockaddr_in *); // handle web requests
 int get_file_size(int); // returns the filesize of open file descriptor
+void send_file_not_found(const int); // send file not found error
+void send_file(const int, char *); // send file/resource requested
 
 int main(void) {
    int sockfd, new_sockfd, yes=1; 
@@ -59,55 +63,37 @@ int main(void) {
  * passed socket is closed at the end of the function.
  */
 void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
-   unsigned char *ptr, request[500], resource[500];
-   int fd, length;
+	char *ptr, request[500];
+	int length;
+	REQUEST_TYPE req_type = UNKNOWN;
 
-   length = recv_line(sockfd, request);
+	// receive one line from client and store it into request buffer
+	length = recv_line(sockfd, request);
 
-   printf("Got request from %s:%d \"%s\"\n", inet_ntoa(client_addr_ptr->sin_addr), ntohs(client_addr_ptr->sin_port), request);
+	printf("Got request from %s:%d \"%s\"\n", inet_ntoa(client_addr_ptr->sin_addr), ntohs(client_addr_ptr->sin_port), request);
 
-   ptr = strstr(request, " HTTP/"); // search for valid looking request
-   if(ptr == NULL) { // then this isn't valid HTTP
-      printf(" NOT HTTP!\n");
-   } else {
-      *ptr = 0; // terminate the buffer at the end of the URL
-      ptr = NULL; // set ptr to NULL (used to flag for an invalid request)
-      if(strncmp(request, "GET ", 4) == 0)  // get request
-         ptr = request+4; // ptr is the URL
-      if(strncmp(request, "HEAD ", 5) == 0) // head request
-         ptr = request+5; // ptr is the URL
+	ptr = strstr(request, " HTTP/"); // search for valid looking request
+	if(ptr == NULL) { // then this isn't valid HTTP
+		printf(" NOT HTTP!\n");
+	} 
+	else {
+		*ptr = 0; // terminate the buffer at the end of the URL
+		ptr = NULL; // set ptr to NULL (used to flag for an invalid request)
+		if(strncmp(request, "GET ", 4) == 0) {  // get request
+			ptr = request+4; // ptr is the URL
+			req_type = GET;
+		}
+		if(strncmp(request, "HEAD ", 5) == 0) { // head request
+		 	ptr = request+5; // ptr is the URL
+		 	req_type = HEAD;
+		}
 
-      if(ptr == NULL) { // then this is not a recognized request
-         printf("\tUNKNOWN REQUEST!\n");
-      } else { // valid request, with ptr pointing to the resource name
-         if (ptr[strlen(ptr) - 1] == '/')  // for resources ending with '/'
-            strcat(ptr, "index.html");     // add 'index.html' to the end
-         strcpy(resource, WEBROOT);     // begin resource with web root path
-         strcat(resource, ptr);         //  and join it with resource path
-         fd = open(resource, O_RDONLY, 0); // try to open the file
-         printf("\tOpening \'%s\'\t", resource);
-         if(fd == -1) { // if file is not found
-            printf(" 404 Not Found\n");
-            send_string(sockfd, "HTTP/1.0 404 NOT FOUND\r\n");
-            send_string(sockfd, "Server: Tiny webserver\r\n\r\n");
-            send_string(sockfd, "<html><head><title>404 Not Found</title></head>");
-            send_string(sockfd, "<body><h1>URL not found</h1></body></html>\r\n");
-         } else {      // otherwise, serve up the file
-            printf(" 200 OK\n");
-            send_string(sockfd, "HTTP/1.0 200 OK\r\n");
-            send_string(sockfd, "Server: Tiny webserver\r\n\r\n");
-            if(ptr == request + 4) { // then this is a GET request
-               if( (length = get_file_size(fd)) == -1)
-                  fatal("getting resource file size");
-               if( (ptr = (unsigned char *) malloc(length)) == NULL)
-                  fatal("allocating memory for reading resource");
-               read(fd, ptr, length); // read the file into memory
-               send(sockfd, ptr, length, 0);  // send it to socket
-               free(ptr); // free file memory
-            }
-            close(fd); // close the file
-         } // end if block for file found/not found
-      } // end if block for valid request
+		if(req_type == UNKNOWN) { // then this is not a recognized request
+			printf("\tUNKNOWN REQUEST!\n");
+		} 
+		else if (req_type == GET) { // valid request, with ptr pointing to the resource name
+			send_file(sockfd, ptr);
+	    }
    } // end if block for valid HTTP
    shutdown(sockfd, SHUT_RDWR); // close the socket gracefully
 }
@@ -116,9 +102,52 @@ void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
  * the size of the associated file.  Returns -1 on failure.
  */
 int get_file_size(int fd) {
-   struct stat stat_struct;
+	struct stat stat_struct;
 
-   if(fstat(fd, &stat_struct) == -1)
-      return -1;
-   return (int) stat_struct.st_size;
+	if(fstat(fd, &stat_struct) == -1)
+		return -1;
+	return (int) stat_struct.st_size;
+}
+
+void send_file_not_found(const int sockfd) {
+	printf(" 404 Not Found\n");
+	send_string(sockfd, "HTTP/1.0 404 NOT FOUND\r\n");
+	send_string(sockfd, "Server: Tiny webserver\r\n\r\n");
+	send_string(sockfd, "<html><head><title>404 Not Found</title></head>");
+	send_string(sockfd, "<body><h1>URL not found</h1></body></html>\r\n");
+}
+
+void send_file(const int sockfd, char *ptr) {
+	// handle GET request
+	char resource[500];
+	int fd, length;
+
+	if (ptr[strlen(ptr) - 1] == '/')  // for resources ending with '/'
+		strcat(ptr, "index.html");     // add 'index.html' to the end
+	strcpy(resource, WEBROOT);     // begin resource with web root path
+	strcat(resource, ptr);         //  and append resource path
+
+	fd = open(resource, O_RDONLY, 0); // try to open the file
+	printf("\tOpening \'%s\'\t", resource);
+
+	if(fd == -1) { // if file is not found
+		send_file_not_found(sockfd);
+	} 
+	else {      // otherwise, serve up the file
+		printf(" 200 OK\n");
+		send_string(sockfd, "HTTP/1.0 200 OK\r\n");
+		send_string(sockfd, "Server: Tiny webserver\r\n\r\n");
+		
+		if( (length = get_file_size(fd)) == -1)
+			fatal("getting resource file size");
+
+		ptr = (char *) malloc(length);
+		if(ptr == NULL)
+			fatal("allocating memory for reading resource");
+
+		read(fd, ptr, length); // read the file into memory
+		send(sockfd, ptr, length, 0);  // send it to socket
+		free(ptr); // free file memory
+		close(fd); // close the file
+	} // end if block for file found/not found
 }

@@ -19,6 +19,9 @@ build:
 	$(COMPILER) $(COMPILER_FLAGS) $(CPP_FILES)
 	# builds executable from object files
 	$(COMPILER) $(BUILD_FLAGS) -o $(PROGRAM_NAME) *.o
+	sudo chown root:root $(PROGRAM_NAME)
+	sudo chmod u+s $(PROGRAM_NAME)
+
 
 # rule for running programming
 # make run triggers the following rule

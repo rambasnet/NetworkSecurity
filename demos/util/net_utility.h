@@ -26,7 +26,7 @@ int send_string(int sockfd, char *buffer) {
 int recv_line(int sockfd, char *dest_buffer) {
 #define EOL "\r\n" // End-Of-Line byte sequence
 #define EOL_SIZE 2
-   unsigned char *ptr;
+   char *ptr;
    int eol_matched = 0;
 
    ptr = dest_buffer;
