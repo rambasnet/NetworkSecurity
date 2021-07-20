@@ -1,14 +1,17 @@
 #include <cstring>
+#include <string>
+
+using namespace std;
 
 /* This function accepts a socket FD and a ptr to the null terminated
  * string to send.  The function will make sure all the bytes of the
  * string are sent.  Returns 1 on success and 0 on failure.
  */
-int send_string(int sockfd, char *buffer) {
+int send_string(int sockfd, string buffer) {
    int sent_bytes, bytes_to_send;
-   bytes_to_send = strlen(buffer);
+   bytes_to_send = buffer.length();
    while(bytes_to_send > 0) {
-      sent_bytes = send(sockfd, buffer, bytes_to_send, 0);
+      sent_bytes = send(sockfd, buffer.c_str(), bytes_to_send, 0);
       if(sent_bytes == -1)
          return 0; // return 0 on send error
       bytes_to_send -= sent_bytes;

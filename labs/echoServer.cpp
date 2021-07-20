@@ -6,12 +6,18 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "hacking.h"
-#include "my-hacking-network.h"
+#include <string>
+#include "./util/utility.h"
+#include "./util/net_utility.h"
+
+using namespace std;
 
 #define PORT 200   // the port users will be connecting to
 
+
 void handle_connection(int, struct sockaddr_in *); // handle web requests
+
+
 
 int main(void) {
    int sockfd, new_sockfd, yes=1; 
@@ -20,11 +26,13 @@ int main(void) {
 
    printf("Accepting requests on port %d\n", PORT);
 
-   if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1)
-      fatal("in socket");
+   if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1) { 
+      fatal("creating socket!");
+   }
 
    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
       fatal("setting socket option SO_REUSEADDR");
+   
 
    host_addr.sin_family = AF_INET;      // host byte order
    host_addr.sin_port = htons(PORT);    // short, network byte order
@@ -54,7 +62,7 @@ int main(void) {
  * passed socket is closed at the end of the function.
  */
 void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
-   unsigned char *ptr, buffer[500];
+   char *ptr, buffer[500];
    int length;
 
    length =  get_internet_data(sockfd, buffer);
