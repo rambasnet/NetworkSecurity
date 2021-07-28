@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 
 /* This function accepts a socket FD and a ptr to the null terminated
- * string to send to the client. The function will make sure all the bytes of the
+ * string to send. The function will make sure all the bytes of the
  * string are sent. Returns 1 on success and 0 on failure.
  */
 int echo(int sockfd, char *buffer) {
@@ -26,17 +26,20 @@ int echo(int sockfd, char *buffer) {
  * the destination buffer is terminated before these bytes.
  * Returns the size of the read line (without EOL bytes).
  */
-unsigned int get_internet_data(int sockfd, char *dest_buffer) {
+int get_internet_data(int sockfd, char *dest_buffer, unsigned int buffer_len) {
    char *ptr;
    ptr = dest_buffer;
-   while(recv(sockfd, ptr, 1, 0) == 1) { // read a single byte
+   unsigned int counter = 0;
+   while(recv(sockfd, ptr, 1, 0) == 1 and counter < buffer_len-1) { // read a single byte
       if(*ptr == '\n') { // does this byte match \n
             *ptr = '\0'; // terminate the string
             return strlen(dest_buffer); // return bytes recevied
       }
       ptr++; // increment the pointer to the next byte;
+      counter++;
    }
-   return 0; // didn't find the end of line characters
+   *ptr = '\0';
+   return buffer_len-1; // didn't find the end of line characters
 }
 
 
