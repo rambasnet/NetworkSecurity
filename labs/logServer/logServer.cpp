@@ -64,7 +64,7 @@ int main(void) {
  * passed socket is closed at the end of the function.
  */
 void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
-   const unsigned int buffer_len = 100;
+   const unsigned int buffer_len = 500;
    char buffer[buffer_len];
    unsigned int length;
 
@@ -83,11 +83,14 @@ void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
 This function logs the buffer on standard output
 */
 void log_data(unsigned int length, char *data) {
-   printf("The input buffer's address:    0x%08x\n",   (unsigned int)  data);
-   printf("The secret message's address:  0x%08x\n",   (unsigned int)  secret);
-   printf("The target variable's address: 0x%08x\n",   (unsigned int)  &target);
+   printf("The input buffer is @:    0x%08x\n",   (unsigned int)  data);
+   printf("The secret message is @:  0x%08x\n",   (unsigned int)  secret);
+   printf("The target variable is @: 0x%08x\n",   (unsigned int)  &target);
    
    printf(data);
+
+   printf("\nDEBUG: ");
+   printf("The target value: %d \t 0x%08x\n",  target, target);
 
    printf("\n(^_^)(^_^)  Logged successfully! (^_^)(^_^)\n");
 }
