@@ -57,10 +57,11 @@ conda install -c conda-forge xeus-cling #c++ kernel
 
 -   Clone/download this repository
 -   You must run the notebook as root to use some scappy features such as sniff()
--   Using a terminal cd into the repo folder and run
+-   Using a terminal `cd` into the repo folder and run `jupyter notebook`
 
 ```bash
-sudo jupyter notebook --allow-rot
+cd <NetworkSecurity_Repo>
+jupyter notebook
 ```
     
 -   Open 00-TableOfContents.ipynb chapter and access all the notebooks
