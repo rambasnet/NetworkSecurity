@@ -1,5 +1,5 @@
 # rule for compiling program
-
+# Note: -m32 is required to compile into object files and the final binary
 COMPILER = g++
 COMPILER_FLAGS = -c -g -Wall -std=c++17 -m32
 BUILD_FLAGS = -m32 -fno-stack-protector -z execstack -no-pie
