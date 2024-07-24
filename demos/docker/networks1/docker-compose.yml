@@ -1,0 +1,46 @@
+version: '3.8'
+
+networks:
+  network1:
+    driver: bridge
+  network2:
+    driver: bridge
+
+services:
+  host1:
+    image: alpine
+    command: sh -c "while true; do sleep 3600; done"
+    networks:
+      - network1
+
+  host2:
+    image: alpine
+    command: sh -c "while true; do sleep 3600; done"
+    networks:
+      - network2
+
+  router:
+    image: alpine
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+        - net.ipv4.ip_forward=1
+    command: sh -c "ip addr add 172.25.0.2/24 dev eth0 && ip link set eth0 up && ip addr add 172.26.0.2/24 dev eth1 && ip link set eth1 up && while true; do sleep 3600; done"
+    networks:
+      network1:
+        ipv4_address: 172.25.0.100
+      network2:
+        ipv4_address: 172.26.0.100
+
+networks:
+  network1:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+  network2:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.0.0/16
+
