@@ -1,9 +1,0 @@
-# Nmap 7.60 scan initiated Fri Aug 21 10:53:19 2020 as: nmap -oN nmapResults.txt localhost
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.0000030s latency).
-Other addresses for localhost (not scanned): ::1
-Not shown: 999 closed ports
-PORT     STATE SERVICE
-8888/tcp open  sun-answerbook
-
-# Nmap done at Fri Aug 21 10:53:19 2020 -- 1 IP address (1 host up) scanned in 0.11 seconds
