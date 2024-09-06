@@ -1,0 +1,49 @@
+services:
+    server:
+        image: aikain/simplehttpserver:0.1
+        container_name: bob
+        hostname: bob
+        restart: always
+        volumes:
+            - ./server_files:/var/www
+        networks:
+            - mitm
+        ports:
+          - "80:80"
+        
+
+    client:
+        image: jlesage/firefox
+        container_name: alice
+        hostname: alice
+        restart: always
+        networks:
+            - mitm
+        ports:
+            - "5800:5800"
+
+    attacker:
+        build:
+          context: . # Use the current directory as the build context
+          dockerfile: Dockerfile
+        image: mitm-attacker # [foldername]-[servicename] 
+        privileged: true
+        container_name: eve
+        hostname: eve
+        cap_add:
+            - ALL
+        volumes:
+            - ./attacker_files:/eve
+        sysctls:
+            # Necessary for transparent mode for mitmproxy
+            - net.ipv4.ip_forward=1
+            - net.ipv6.conf.all.forwarding=1
+            - net.ipv4.conf.all.send_redirects=0
+        networks:
+            - mitm
+        command: bash -c "tail -f /dev/null"
+
+networks:
+    mitm:
+        driver: bridge
+
