@@ -26,7 +26,7 @@ services:
         build:
           context: . # Use the current directory as the build context
           dockerfile: Dockerfile
-        image: mitm-attacker # [foldername]-[servicename] 
+        image: kalilinux # [foldername]-[servicename] 
         privileged: true
         container_name: eve
         hostname: eve

