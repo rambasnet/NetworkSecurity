@@ -1,4 +1,3 @@
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=15569800)
 # Network Security and Scapy Notebooks
 
 Jupyter Notebooks for learning network-based exploitations, network utility tools and scapy library - a powerful interactive packet manipulation program for Python.
@@ -8,7 +7,6 @@ Some of the contents are based on [Hacking: The Art of Exploitation by Jon Erick
 Scapy: https://github.com/secdev/scapy/
 
 ## Scapy documentation: https://scapy.readthedocs.io/en/latest/
-
 
 ## Requirements
 
@@ -25,7 +23,6 @@ Scapy: https://github.com/secdev/scapy/
 - boost C++ libraries
 
 ## Install Required Tools
-
 
 ```bash
 sudo apt update
@@ -44,8 +41,8 @@ pip install ptpython # better python REPL for terminal
 
 ## Jupyter Notebook
 
--   Install Python 3.x Miniconda for Linux: https://conda.io/en/latest/miniconda.html
--   Once miniconda is installed, install Jupyter Notebook using conda
+- Install Python 3.x Miniconda for Linux: https://conda.io/en/latest/miniconda.html
+- Once miniconda is installed, install Jupyter Notebook using conda
 
 ```bash
 curl -o Miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -57,13 +54,13 @@ conda install -c conda-forge xeus-cling #c++ kernel
 
 ## Play with Notebooks
 
--   Clone/download this repository
--   You must run the notebook as root to use some scappy features such as sniff()
--   Using a terminal `cd` into the repo folder and run `jupyter notebook`
+- Clone/download this repository
+- You must run the notebook as root to use some scappy features such as sniff()
+- Using a terminal `cd` into the repo folder and run `jupyter notebook`
 
 ```bash
 cd <NetworkSecurity_Repo>
 jupyter notebook
 ```
     
--   Open 00-TableOfContents.ipynb chapter and access all the notebooks
+- Open 00-TableOfContents.ipynb chapter and access all the notebooks
