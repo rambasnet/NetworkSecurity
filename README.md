@@ -41,6 +41,7 @@ sudo apt install libsqlite3-dev
 sudo apt install sqlitebrowswer
 pip install ptpython # better python REPL for terminal
 ```
+
 ## Jupyter Notebook
 
 -   Install Python 3.x Miniconda for Linux: https://conda.io/en/latest/miniconda.html
