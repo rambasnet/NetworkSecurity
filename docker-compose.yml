@@ -1,0 +1,35 @@
+services:
+  notebook:
+    build:
+      context: . # Use the current directory as the build context
+      dockerfile: Dockerfile
+    image: seedubuntu # [foldername]-[servicename]
+    privileged: true
+    container_name: seedubuntu
+    hostname: seedubuntu
+    cap_add:
+      - ALL
+    volumes:
+      - ./:/course_contents
+    ports:
+      - "8888:8888"
+    networks:
+      - bridge_network
+    command: bash -c "
+      cd /course_contents &&
+      jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root"
+
+  client:
+    image: handsonsecurity/seed-ubuntu:large
+    container_name: client
+    hostname: client
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      - bridge_network
+    command: bash -c "tail -f /dev/null"
+
+networks:
+  bridge_network:
+    driver: bridge

@@ -1,0 +1,54 @@
+services:
+  attacker:
+    build:
+      context: . # Use the current directory as the build context
+      dockerfile: Dockerfile
+    image: kali # [foldername]-[servicename]
+    privileged: true
+    container_name: attacker
+    hostname: attacker
+    cap_add:
+      - ALL
+    volumes:
+      - ./volumes:/volumes
+    sysctls:
+      # Necessary for transparent mode for mitmproxy
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv4.conf.all.send_redirects=0
+    networks:
+      - mitm
+    command: bash -c "tail -f /dev/null"
+
+  server:
+    image: tx6244/metasploitable2
+    container_name: server
+    hostname: server
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      - mitm
+    command: bash -c "
+      /etc/init.d/openbsd-inetd start  &&
+      /bin/services.sh &&
+      tail -f /dev/null"
+    ports:
+      - "80:80"
+
+  client:
+    image: handsonsecurity/seed-ubuntu:large
+    container_name: client
+    hostname: client
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      - mitm
+    command: bash -c "
+      /etc/init.d/openbsd-inetd start  &&
+      tail -f /dev/null"
+
+networks:
+  mitm:
+    driver: bridge
