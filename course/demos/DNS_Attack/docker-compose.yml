@@ -3,7 +3,8 @@ version: "3"
 services:
   router:
     image: handsonsecurity/seed-ubuntu:large
-    container_name: router-.11
+    container_name: router-11
+    hostname: router-11
     tty: true
     cap_add:
       - ALL
@@ -20,10 +21,11 @@ services:
       iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE &&
       tail -f /dev/null"
 
-  local-server:
-    build: ./local_dns_server
-    image: local-dns-server
-    container_name: local-dns-server-.53
+  dns-server:
+    build: ./dns_server
+    image: dns-server
+    container_name: dns-server-53
+    hostname: dns-server-53
     tty: true
     cap_add:
       - ALL
@@ -36,9 +38,10 @@ services:
       service named start && tail -f /dev/null"
 
   user:
-    build: ./image_user
-    image: user-.5
-    container_name: user-10.9.0.5
+    build: ./user
+    image: user
+    container_name: user-5
+    hostname: user-5
     tty: true
     cap_add:
       - ALL
@@ -52,7 +55,8 @@ services:
 
   attacker:
     image: handsonsecurity/seed-ubuntu:large
-    container_name: seed-attacker
+    container_name: attacker
+    hostname: attacker
     tty: true
     cap_add:
       - ALL
@@ -61,10 +65,11 @@ services:
       - ./volumes:/volumes
     network_mode: host
 
-  attacker-ns:
-    build: ./image_attacker_ns
-    image: seed-attacker-ns
-    container_name: attacker-ns-10.9.0.153
+  attackers-ns:
+    build: ./attackers_ns
+    image: attackers-ns
+    container_name: attackers-ns-153
+    hostname: attackers-ns-153
     tty: true
     cap_add:
       - ALL

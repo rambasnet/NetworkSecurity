@@ -19,20 +19,24 @@ options {
 	// you will need to update your keys.  See https://www.isc.org/bind-keys
 	//========================================================================
 
-        // ---------------------------------------
-        // Added/Modified for SEED labs
+	// ---------------------------------------
+	// Added/Modified for SEED labs
 	// dnssec-validation auto;
-        dnssec-validation no;
-        dnssec-enable no;
-        dump-file "/var/cache/bind/dump.db";
-        query-source port         33333;
+	dnssec-validation no;
+	dnssec-enable no;
+	dump-file "/var/cache/bind/dump.db";
+	query-source port         33333;
 
-        // Access control
-        allow-query { any; };
-        allow-query-cache { any; };
-        allow-recursion { any; };
+	// Access control
+	allow-query { any; };
+	allow-query-cache { any; };
+	allow-recursion { any; };
 
-        // ---------------------------------------
+	// ---------------------------------------
 
 	listen-on-v6 { any; };
+
+	// don't create empty zone for 168.192.in-addr.arpa and other reserved address spaces
+	// 192.168.0.0/16 is a private address space
+	empty-zones-enable no;
 };

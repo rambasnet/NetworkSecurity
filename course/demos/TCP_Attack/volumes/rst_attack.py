@@ -14,14 +14,14 @@ SRC_PORT = 23
 # FIXME: set client IP address
 DST_IP = "10.9.0.6"
 # FIXME: set clien port
-DST_PORT = 40608
+DST_PORT = 36422
 
 # FIXME: set the sequence number
 # seq from server to client from most recent packet in sniff_telnet.py output
-SEQ_NUM = 519111988
+SEQ_NUM = 4293272265
 # FIXME: set acknowledgment number
 # ack from server to client from most recent packet in sniff_telnet.py output
-ACK_NUM = 4270553275
+ACK_NUM = 882119968
 
 
 def send_rst_packet():
