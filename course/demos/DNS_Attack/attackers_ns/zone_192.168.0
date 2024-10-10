@@ -9,3 +9,4 @@ $TTL    3D
 
 101     IN      PTR   www.attacker32.com.
 102     IN      PTR   abc.attacker32.com.
+110     IN      PTR   *.attacker32.com.

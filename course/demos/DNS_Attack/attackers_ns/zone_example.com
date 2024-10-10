@@ -1,14 +1,13 @@
 $TTL 3D
 @       IN      SOA   ns.example.com. admin.example.com. (
-                2008111001
+                2024100901
                 8H
                 2H
                 4W
                 1D)
 
-@       IN      NS    ns.attacker32.com.
-
+@       IN      NS    10.9.0.153
 @       IN      A     1.2.3.4
-www     IN      A     1.2.3.5
+www     IN      A     8.8.8.8
 ns      IN      A     10.9.0.153
 *       IN      A     1.2.3.6

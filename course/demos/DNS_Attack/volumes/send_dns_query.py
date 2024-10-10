@@ -3,13 +3,13 @@
 from scapy.all import *
 
 DNS_SERVER_IP = "8.8.8.8"
-# SRC_IP = "10.9.0.1" # tried this, but it didn't work
+# SRC_IP = "0.0.0.0"  # tried this, but it didn't work
 QUERY_DOMAIN = "www.coloradomesa.edu"
 
 
 def send_dns_query():
     # Define the target IP address
-    IPpkt = IP(dst=DNS_SERVER_IP, src=SRC_IP)
+    IPpkt = IP(dst=DNS_SERVER_IP)
     UDPpkt = UDP(dport=53)
     # Define the DNS query
     DNSpkt = DNS(id=100, qr=0, qdcount=1, qd=DNSQR(qname=QUERY_DOMAIN))
