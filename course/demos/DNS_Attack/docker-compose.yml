@@ -77,6 +77,21 @@ services:
       net-10.9.0.0:
         ipv4_address: 10.9.0.153
 
+  firefox:
+    image: jlesage/firefox
+    container_name: firefox
+    hostname: firefox
+    restart: always
+    cap_add:
+      - ALL
+    ports:
+      - "5800:5800"
+    networks:
+      net-10.9.0.0:
+        ipv4_address: 10.9.0.100
+    dns:
+      - 10.9.0.53
+
 networks:
   net-10.8.0.0:
     name: net-10.8.0.0
