@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from scapy.all import DNS, IP, sniff, UDP, DNSRR, send
-IFACE = 'br-fb2031069502'  # FIXME : Change this to 10.9.0.1 network interface
+IFACE = 'br-df7a55cb9efa'  # FIXME : Change this to 10.9.0.1 network interface
 # Sniff UDP query packets and invoke spoof_dns().
 # Spoof the DNS response to www.example.net for the query packets
 FILTER = 'udp and dst port 53'
