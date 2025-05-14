@@ -4,15 +4,14 @@ Jupyter Notebooks for learning network security, network utility tools and scapy
 
 Some of the contents are based on:
 
-1. [Hacking: The Art of Exploitation by Jon Erickson](https://www.amazon.com/Hacking-Art-Exploitation-Jon-Erickson/dp/1593271441/)
-2. [SEED Labs](https://seedsecuritylabs.org/)
-3. Scapy: [https://github.com/secdev/scapy/](https://github.com/secdev/scapy/)
+1. [SEED Labs](https://seedsecuritylabs.org/)
+2. Scapy: [https://github.com/secdev/scapy/](https://github.com/secdev/scapy/)
 
 ## Requirements
 
-- x86/64 Machine preferably Mac/Linux
+- x86/64 Machine preferably Mac (Intel)/Linux
 - Docker
-- Docker compose
+- Docker Compose
 
 ## Run Jupyter Notebook in Docker Container
 

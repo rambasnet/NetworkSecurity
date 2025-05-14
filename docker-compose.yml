@@ -1,12 +1,13 @@
 services:
   notebook:
     build:
-      context: . # Use the current directory as the build context
+      context: ./ # Use the current directory as the build context
       dockerfile: Dockerfile
     image: seedubuntu # [foldername]-[servicename]
     privileged: true
     container_name: seedubuntu
     hostname: seedubuntu
+    working_dir: /course_contents
     cap_add:
       - ALL
     volumes:
