@@ -17,7 +17,6 @@ services:
     networks:
       - bridge_network
     command: bash -c "
-      cd /course_contents &&
       jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root"
 
   client:
