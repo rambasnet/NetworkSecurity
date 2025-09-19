@@ -90,7 +90,7 @@ mitmproxy -m transparent -s proxy.py
 
 ### Note
 
-- If the browser shows legit content instead of the modified one, make sure clear all the browser cookies, cache and everything from Privacy & Security page and reload the page
+- If the alice's browser shows legit content instead of the modified one, make sure to clear all the browser cookies, cache and everything from Privacy & Security page of both external (host) and docker (alice) browsers and reload the page on alice's browser.
 
 ## DNS Spoof - Not Working YET
 
