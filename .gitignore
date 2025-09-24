@@ -43,4 +43,4 @@ core
 core.*
 .DS_Store
 docker_access_token.txt
-course/
+
