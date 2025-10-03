@@ -36,5 +36,4 @@ def inject_command():
 
 if __name__ == "__main__":
     inject_command()
-    # Usage: python3 rst_attack.py
-    # Example: python3 rst_attack.py
+    # Usage: python3 session_hijack.py
