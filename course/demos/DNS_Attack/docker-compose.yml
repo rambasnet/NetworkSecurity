@@ -65,11 +65,11 @@ services:
       - ./volumes:/volumes
     network_mode: host
 
-  attackers-ns:
-    build: ./attackers_ns
-    image: attackers-ns
-    container_name: attackers-ns-153
-    hostname: attackers-ns-153
+  attacker-dns:
+    build: ./attacker_dns
+    image: attacker-dns
+    container_name: attacker-dns-153
+    hostname: attacker-dns-153
     tty: true
     cap_add:
       - ALL
