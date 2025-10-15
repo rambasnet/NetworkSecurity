@@ -1,7 +1,4 @@
-FROM handsonsecurity/seed-ubuntu:large
-
-RUN apt update && apt install -y dnsutils bind9 \
-    && apt clean
+FROM handsonsecurity/seed-server:bind
 
 # Copy the configuration file for the local DNS server
 COPY named.conf           /etc/bind/
