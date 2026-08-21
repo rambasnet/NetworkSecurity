@@ -1,0 +1,5 @@
+services:
+  web:
+    image: alpine
+    tty: true
+    stdin_open: true
