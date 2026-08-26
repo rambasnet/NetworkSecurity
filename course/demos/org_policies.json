@@ -1,0 +1,28 @@
+{
+    "policies": [
+        {
+            "name": "fixable-vulnerabilities",
+            "config": {
+                "severities": [
+                    "CRITICAL",
+                    "HIGH"
+                ],
+                "fixable_only": true,
+                "grace_period_days": 14
+            }
+        },
+        {
+            "name": "copyleft-license",
+            "enabled": false,
+            "weight": 0
+        },
+        {
+            "name": "no-stale-base-images",
+            "enabled": false
+        },
+        {
+            "name": "default-non-root-user",
+            "enabled": false
+        }
+    ]
+}
