@@ -2,34 +2,62 @@ services:
   notebook:
     build:
       context: ./ # Use the current directory as the build context
-      dockerfile: Dockerfile
-    image: seedubuntu # [foldername]-[servicename]
+      dockerfile: Dockerfile.kali
+    image: kali
     privileged: true
-    container_name: seedubuntu
-    hostname: seedubuntu
+    container_name: kali
+    hostname: kali
     working_dir: /course_contents
     cap_add:
       - ALL
     volumes:
       - ./:/course_contents
     ports:
-      - "8888:8888"
+      - 8888:8888
     networks:
-      - bridge_network
-    command: bash -c "
-      jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root"
+      net-192.168.100.0:
+        ipv4_address: 192.168.100.10
+    command:
+      - jupyter
+      - notebook
+      - --ip=0.0.0.0
+      - --port=8888
+      - --no-browser
+      - --allow-root
 
-  client:
-    image: handsonsecurity/seed-ubuntu:large
-    container_name: client
-    hostname: client
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    image: server
+    container_name: server
+    hostname: server
     tty: true
     cap_add:
       - ALL
+    volumes:
+      - ./course/demos/FlaskWebApp:/app
+    ports:
+      - 5555:5555
     networks:
-      - bridge_network
-    command: bash -c "tail -f /dev/null"
+      net-192.168.100.0:
+        ipv4_address: 192.168.100.200
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine
+    image: lab-client
+    container_name: client
+    hostname: client
+    tty: true
+    networks:
+      net-192.168.100.0:
+        ipv4_address: 192.168.100.100
 
 networks:
-  bridge_network:
-    driver: bridge
+  net-192.168.100.0:
+    name: net-192.168.100.0
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24

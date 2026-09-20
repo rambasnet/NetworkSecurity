@@ -11,7 +11,9 @@ services:
         privileged: true
         volumes:
             - ./volumes:/volumes
-        network_mode: host
+        networks:
+            net-10.10.0.0:
+                ipv4_address: 10.10.0.2
 
     server:
         image: ubuntu:latest

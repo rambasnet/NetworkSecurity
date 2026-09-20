@@ -10,7 +10,7 @@ sudo apt install python3-flask
 
 ## Run the Flask App on a Different Host and Port
 
-- by default, Flask runs on `localhost` and port `5000`
+- by default, Flask runs on `localhost` and port `5555`
 
 ```bash
 flask run --host=<ip> --port=<port>
@@ -19,4 +19,4 @@ flask run --host=<ip> --port=<port>
 ## Open the App in Browser
 
 - http://<ip>:<port>
-- http://localhost:5000
+- http://localhost:5555
