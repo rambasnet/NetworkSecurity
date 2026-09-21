@@ -20,7 +20,7 @@ cd <cloned_repo>
 docker compose build
 docker compose up -d
 docker ps
-docker exec -it seedubuntu bash
+docker exec -it kali bash
 jupyter server list
 ```
 
