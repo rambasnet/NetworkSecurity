@@ -37,6 +37,8 @@ services:
     tty: true
     cap_add:
       - ALL
+      - NET_ADMIN
+      - NET_RAW
     volumes:
       - ./course/demos/FlaskWebApp:/app
     ports:
