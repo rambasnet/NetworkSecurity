@@ -5,7 +5,7 @@ RUN apt update --error-on=any \
     time curl git nano \
     net-tools iputils-ping iproute2 sudo gdb less \
     python3 python3-pip python3-venv python-is-python3 \
-    dsniff tcpdump \
+    dsniff tcpdump iptables\
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
 

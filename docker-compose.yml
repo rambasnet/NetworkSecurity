@@ -10,6 +10,8 @@ services:
     working_dir: /course_contents
     cap_add:
       - ALL
+      - NET_ADMIN
+      - NET_RAW
     volumes:
       - ./:/course_contents
     ports:
@@ -17,13 +19,13 @@ services:
     networks:
       net-192.168.100.0:
         ipv4_address: 192.168.100.10
+    tty: true
     command:
-      - jupyter
-      - notebook
-      - --ip=0.0.0.0
-      - --port=8888
-      - --no-browser
-      - --allow-root
+      [
+        "/bin/bash",
+        "-c",
+        "jupyter notebook --allow-root --ip=192.168.100.10 --port=8888",
+      ]
 
   server:
     build:
@@ -39,6 +41,11 @@ services:
       - ./course/demos/FlaskWebApp:/app
     ports:
       - 5555:5555
+    privileged: true
+    sysctls:
+      - net.ipv4.tcp_syncookies=0
+      - net.ipv4.tcp_max_syn_backlog=1
+      - net.ipv4.tcp_synack_retries=100
     networks:
       net-192.168.100.0:
         ipv4_address: 192.168.100.200
